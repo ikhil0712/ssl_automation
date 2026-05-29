@@ -1,8 +1,0 @@
-2026-05-29 12:33:43,714  INFO      ssl_validator — Loading targets from /home/vvdn/Downloads/ssl-automation/config/targets.yaml
-2026-05-29 12:33:43,714  INFO      ssl_validator — Loading policy from  /home/vvdn/Downloads/ssl-automation/config/policy.yaml
-2026-05-29 12:33:43,718  INFO      ssl_validator — Starting validation of 1 target(s) with 5 worker(s)
-2026-05-29 12:33:43,718  INFO      ssl_validator — Validating [google.com] google.com:443
-2026-05-29 12:33:44,963  INFO      ssl_validator — Result [google.com] google.com:443 → PASS
-2026-05-29 12:33:44,964  INFO      report_generator — Report written → /home/vvdn/Downloads/ssl-automation/reports/report_20260529_123344.html (html)
-2026-05-29 12:33:44,964  INFO      ssl_validator — Report written to /home/vvdn/Downloads/ssl-automation/reports/report_20260529_123344.html
-2026-05-29 12:33:44,964  INFO      ssl_validator — Summary — Total: 1  Pass: 1  Warn: 0  Fail: 0

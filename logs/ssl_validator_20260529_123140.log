@@ -1,9 +1,0 @@
-2026-05-29 12:31:40,554  INFO      ssl_validator — Loading targets from /home/vvdn/Downloads/ssl-automation/config/targets.yaml
-2026-05-29 12:31:40,554  INFO      ssl_validator — Loading policy from  /home/vvdn/Downloads/ssl-automation/config/policy.yaml
-2026-05-29 12:31:40,557  INFO      ssl_validator — Starting validation of 1 target(s) with 5 worker(s)
-2026-05-29 12:31:40,557  INFO      ssl_validator — Validating [google.com] google.com:443
-2026-05-29 12:31:41,740  WARNING   cipher_checks — [google.com] CIPHER_NO_ALLOWED_ACCEPTED — None of the policy-allowed ciphers were accepted by the server
-2026-05-29 12:31:41,740  INFO      ssl_validator — Result [google.com] google.com:443 → WARN
-2026-05-29 12:31:41,742  INFO      report_generator — Report written → /home/vvdn/Downloads/ssl-automation/reports/report_20260529_123141.html (html)
-2026-05-29 12:31:41,742  INFO      ssl_validator — Report written to /home/vvdn/Downloads/ssl-automation/reports/report_20260529_123141.html
-2026-05-29 12:31:41,742  INFO      ssl_validator — Summary — Total: 1  Pass: 0  Warn: 1  Fail: 0
