@@ -1,0 +1,126 @@
+# .github/workflows/ssl-validation.yml
+# Runs SSL/TLS validation on a schedule and on manual dispatch.
+
+name: SSL / TLS Validation
+
+on:
+  # ── Scheduled: daily at 06:00 UTC ─────────────────────────────────────────
+  schedule:
+    - cron: "0 6 * * *"
+
+  # ── Manual trigger with optional tag filter ────────────────────────────────
+  workflow_dispatch:
+    inputs:
+      tag_filter:
+        description: "Filter targets by tag (leave blank for all)"
+        required: false
+        default: ""
+      report_format:
+        description: "Report format"
+        required: false
+        default: "html"
+        type: choice
+        options:
+          - html
+          - json
+          - text
+      fail_fast:
+        description: "Fail workflow if any target fails"
+        required: false
+        default: "true"
+        type: boolean
+
+  # ── On push / PR to main (optional — remove if too noisy) ─────────────────
+  push:
+    branches: [main]
+    paths:
+      - "config/**"
+      - "scripts/**"
+      - "requirements.txt"
+
+jobs:
+  ssl-validate:
+    name: Validate SSL / TLS
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    permissions:
+      contents: read
+
+    steps:
+      # ── 1. Checkout ─────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Set up Python ────────────────────────────────────────────────────
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      # ── 3. Install dependencies ─────────────────────────────────────────────
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # ── 4. Run validator ────────────────────────────────────────────────────
+      - name: Run SSL validator
+        id: validate
+        run: |
+          mkdir -p reports logs
+
+          TAG_ARG=""
+          if [ -n "${{ github.event.inputs.tag_filter }}" ]; then
+            TAG_ARG="--tag ${{ github.event.inputs.tag_filter }}"
+          fi
+
+          FAIL_ARG=""
+          if [ "${{ github.event.inputs.fail_fast || 'true' }}" = "true" ]; then
+            FAIL_ARG="--fail-fast"
+          fi
+
+          FORMAT="${{ github.event.inputs.report_format || 'html' }}"
+
+          python scripts/ssl_validator.py \
+            --targets config/targets.yaml \
+            --policy  config/policy.yaml  \
+            --format  "$FORMAT"            \
+            $TAG_ARG                       \
+            $FAIL_ARG
+
+      # ── 5. Upload report artifact ───────────────────────────────────────────
+      - name: Upload report
+        if: always()   # upload even if validation fails
+        uses: actions/upload-artifact@v4
+        with:
+          name: ssl-report-${{ github.run_id }}
+          path: |
+            reports/
+            logs/
+          retention-days: 30
+
+      # ── 6. Post summary to GitHub Step Summary ──────────────────────────────
+      - name: Publish summary
+        if: always()
+        run: |
+          REPORT_FILE=$(ls reports/*.html 2>/dev/null | head -n1)
+          if [ -n "$REPORT_FILE" ]; then
+            echo "## 🔒 SSL Validation Report" >> $GITHUB_STEP_SUMMARY
+            echo "Report saved to: \`$REPORT_FILE\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Download the full report from the **Artifacts** section above." >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Also append last 30 lines of log for quick inspection
+          LOGFILE=$(ls logs/*.log 2>/dev/null | tail -n1)
+          if [ -n "$LOGFILE" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "<details><summary>Log tail</summary>" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            tail -30 "$LOGFILE" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "</details>" >> $GITHUB_STEP_SUMMARY
+          fi
