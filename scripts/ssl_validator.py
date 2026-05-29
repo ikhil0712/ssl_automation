@@ -11,7 +11,7 @@ import argparse
 import logging
 import yaml
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from certificate_checks import CertificateChecker
