@@ -166,33 +166,54 @@ class CertificateChecker:
             logger.debug("%s cert valid for %d more days", self.host, days)
 
     def _check_hostname(self, cert: x509.Certificate, result: dict) -> None:
-        try:
-            ssl.match_hostname(
-                {"subject": ((("commonName", cert.subject.get_attributes_for_oid(
-                    x509.oid.NameOID.COMMON_NAME)[0].value),),)},
-                self.host,
-            )
-            return
-        except (ssl.CertificateError, IndexError):
-            pass
+        """
+        Verify the certificate covers self.host.
+        ssl.match_hostname() was removed in Python 3.12; we implement the
+        check directly using the cryptography library.
+        RFC 6125: if a SAN extension is present, only SANs are checked;
+        the CN is ignored.  No SAN extension -> fall back to CN.
+        """
+        host = self.host.lower()
 
-        # Also check SANs manually
+        def _wildcard_match(pattern: str, hostname: str) -> bool:
+            pattern = pattern.lower()
+            if pattern == hostname:
+                return True
+            if pattern.startswith("*."):
+                suffix = pattern[2:]
+                if hostname.endswith("." + suffix):
+                    left = hostname[:-(len(suffix) + 1)]
+                    if left and "." not in left:
+                        return True
+            return False
+
+        # Check SANs first (RFC 6125 — CN ignored when SAN present)
         try:
-            san_ext = cert.extensions.get_extension_for_oid(ExtensionOID.SUBJECT_ALTERNATIVE_NAME)
-            names   = [str(n.value) for n in san_ext.value]
-            for name in names:
-                if name == self.host:
-                    return
-                if name.startswith("*."):
-                    parent = name[2:]
-                    if self.host.endswith("." + parent) or self.host == parent:
-                        return
+            san_ext = cert.extensions.get_extension_for_oid(
+                ExtensionOID.SUBJECT_ALTERNATIVE_NAME
+            )
+            for entry in san_ext.value:
+                if isinstance(entry, x509.DNSName):
+                    if _wildcard_match(entry.value, host):
+                        return   # matched
+            self._add_finding(result, "fail", "CERT_HOSTNAME_MISMATCH",
+                              f"Certificate SANs do not cover hostname '{self.host}'")
+            return
         except x509.ExtensionNotFound:
+            pass   # no SAN extension — check CN
+
+        # Fall back to Common Name
+        try:
+            cn = cert.subject.get_attributes_for_oid(
+                x509.oid.NameOID.COMMON_NAME
+            )[0].value
+            if _wildcard_match(cn, host):
+                return
+        except IndexError:
             pass
 
         self._add_finding(result, "fail", "CERT_HOSTNAME_MISMATCH",
-                          f"Certificate does not match hostname '{self.host}'")
-
+                          f"Certificate does not cover hostname '{self.host}'")
     def _check_self_signed(self, cert: x509.Certificate, chain_valid: bool,
                            chain_error: str | None, result: dict) -> None:
         is_self_signed = cert.issuer == cert.subject
