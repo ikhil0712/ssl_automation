@@ -1,0 +1,72 @@
+# SSL Automation - Target Domains Configuration
+# Define domains/hosts to be monitored and validated
+# targets:
+#   - name: "My App"
+#     host: "yourdomain.com"
+#     port: 443
+#     tags: [production]
+#     notify: ["you@example.com"]
+
+# targets:
+#   - name: "Production API"
+#     host: "api.example.com"
+#     port: 443
+#     tags:
+#       - production
+#       - critical
+#     notify:
+#       - "ops-team@example.com"
+
+targets:
+  - name: "Production API"
+    host: "vvdntech.com"
+    port: 443
+    tags:
+      - production
+      - critical
+    notify:
+      - "ops-team@example.com"
+
+#   - name: "Web App"
+#     host: "www.example.com"
+#     port: 443
+#     tags:
+#       - production
+#       - public-facing
+#     notify:
+#       - "ops-team@example.com"
+#       - "webmaster@example.com"
+
+#   - name: "Internal Dashboard"
+#     host: "dashboard.internal.example.com"
+#     port: 8443
+#     tags:
+#       - internal
+#     notify:
+#       - "infra-team@example.com"
+
+#   - name: "Staging Environment"
+#     host: "staging.example.com"
+#     port: 443
+#     tags:
+#       - staging
+#     notify:
+#       - "dev-team@example.com"
+
+#   - name: "Payment Gateway"
+#     host: "payments.example.com"
+#     port: 443
+#     tags:
+#       - production
+#       - pci
+#       - critical
+#     notify:
+#       - "security-team@example.com"
+#       - "ops-team@example.com"
+
+# # Default settings (can be overridden per target)
+# defaults:
+#   port: 443
+#   timeout: 10             # seconds
+#   expiry_warning_days: 30
+#   expiry_critical_days: 14

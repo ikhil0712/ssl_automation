@@ -1,0 +1,16 @@
+2026-05-29 12:35:28,353  INFO      ssl_validator — Loading targets from /home/vvdn/Downloads/ssl-automation/config/targets.yaml
+2026-05-29 12:35:28,353  INFO      ssl_validator — Loading policy from  /home/vvdn/Downloads/ssl-automation/config/policy.yaml
+2026-05-29 12:35:28,357  INFO      ssl_validator — Starting validation of 1 target(s) with 5 worker(s)
+2026-05-29 12:35:28,357  INFO      ssl_validator — Validating [Production API] api.example.com:443
+2026-05-29 12:35:28,447  WARNING   tls_checks — Network error probing TLSv1.0 on api.example.com:443 — [Errno -5] No address associated with hostname
+2026-05-29 12:35:28,493  WARNING   tls_checks — Network error probing TLSv1.1 on api.example.com:443 — [Errno -5] No address associated with hostname
+2026-05-29 12:35:28,523  WARNING   tls_checks — Network error probing TLSv1.2 on api.example.com:443 — [Errno -5] No address associated with hostname
+2026-05-29 12:35:28,618  WARNING   tls_checks — Network error probing TLSv1.3 on api.example.com:443 — [Errno -5] No address associated with hostname
+2026-05-29 12:35:28,618  WARNING   tls_checks — [api.example.com] TLS_NO_ALLOWED_VERSION — None of the allowed TLS versions are supported: ['TLSv1.2', 'TLSv1.3']
+2026-05-29 12:35:28,618  WARNING   tls_checks — [api.example.com] TLS_PREFERRED_UNAVAILABLE — Preferred TLS version TLSv1.3 is not supported (informational)
+2026-05-29 12:35:28,653  WARNING   cipher_checks — Could not determine negotiated cipher for api.example.com: [Errno -5] No address associated with hostname
+2026-05-29 12:35:29,100  WARNING   cipher_checks — [api.example.com] CIPHER_NO_ALLOWED_ACCEPTED — None of the policy-allowed ciphers were accepted by the server
+2026-05-29 12:35:29,100  INFO      ssl_validator — Result [Production API] api.example.com:443 → FAIL
+2026-05-29 12:35:29,102  INFO      report_generator — Report written → /home/vvdn/Downloads/ssl-automation/reports/report_20260529_123529.html (html)
+2026-05-29 12:35:29,102  INFO      ssl_validator — Report written to /home/vvdn/Downloads/ssl-automation/reports/report_20260529_123529.html
+2026-05-29 12:35:29,102  INFO      ssl_validator — Summary — Total: 1  Pass: 0  Warn: 0  Fail: 1

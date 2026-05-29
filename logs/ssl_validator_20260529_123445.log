@@ -1,0 +1,10 @@
+2026-05-29 12:34:45,987  INFO      ssl_validator — Loading targets from /home/vvdn/Downloads/ssl-automation/config/targets.yaml
+2026-05-29 12:34:45,987  INFO      ssl_validator — Loading policy from  /home/vvdn/Downloads/ssl-automation/config/policy.yaml
+2026-05-29 12:34:45,991  INFO      ssl_validator — Starting validation of 1 target(s) with 5 worker(s)
+2026-05-29 12:34:45,991  INFO      ssl_validator — Validating [My App] yourdomain.com:443
+2026-05-29 12:34:46,720  WARNING   certificate_checks — [yourdomain.com] CERT_HOSTNAME_MISMATCH — Certificate does not match hostname 'yourdomain.com'
+2026-05-29 12:34:46,720  WARNING   certificate_checks — [yourdomain.com] CERT_CHAIN_INVALID — Certificate chain validation failed: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'yourdomain.com'. (_ssl.c:1007)
+2026-05-29 12:34:52,042  INFO      ssl_validator — Result [My App] yourdomain.com:443 → FAIL
+2026-05-29 12:34:52,043  INFO      report_generator — Report written → /home/vvdn/Downloads/ssl-automation/reports/report_20260529_123452.html (html)
+2026-05-29 12:34:52,044  INFO      ssl_validator — Report written to /home/vvdn/Downloads/ssl-automation/reports/report_20260529_123452.html
+2026-05-29 12:34:52,044  INFO      ssl_validator — Summary — Total: 1  Pass: 0  Warn: 0  Fail: 1

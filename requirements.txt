@@ -1,0 +1,13 @@
+# SSL Automation — Python dependencies
+
+# YAML parsing (config files)
+PyYAML>=6.0.1
+
+# X.509 certificate introspection (key size, SAN, sig alg, etc.)
+cryptography>=42.0.0
+
+# (Optional) Rich terminal output — remove if not needed
+# rich>=13.7.0
+
+# (Optional) Jinja2 for templated HTML reports — remove if not needed
+# Jinja2>=3.1.3
