@@ -6,7 +6,7 @@ name: SSL / TLS Validation
 on:
   # ── Scheduled: daily at 06:00 UTC ─────────────────────────────────────────
   schedule:
-    - cron: "0 6 * * *"
+    - cron: "* * * * *"
 
   # ── Manual trigger with optional tag filter ────────────────────────────────
   workflow_dispatch:
