@@ -73,7 +73,7 @@ def validate_target(target: dict, policy: dict, defaults: dict) -> dict:
         "port":      port,
         "tags":      target.get("tags", []),
         "notify":    target.get("notify", []),
-        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "status":    "pass",          # upgraded to "warn" / "fail" below
         "checks":    {},
     }
@@ -192,7 +192,7 @@ def main() -> int:
                     "name":      target.get("name", target.get("host")),
                     "host":      target.get("host"),
                     "port":      target.get("port", 443),
-                    "timestamp": datetime.utcnow().isoformat() + "Z",
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     "status":    "error",
                     "checks":    {},
                     "error":     str(exc),
